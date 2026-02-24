@@ -1,25 +1,25 @@
 import js from '@eslint/js';
-import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import { defineConfig } from 'eslint/config';
+import globals from 'globals';
 
-export default tseslint.config(
+export default defineConfig([
   { ignores: ['dist/**', 'node_modules/**'] },
-  js.configs.recommended,
   ...tseslint.configs.recommended,
+  js.configs.recommended,
   {
     languageOptions: {
-      globals: globals.node,
-      parserOptions: { project: './tsconfig.json' }
+      globals: {
+        ...globals.node,
+      },
     },
     rules: {
       // Ваш стиль: точки с запятой (warn - желтый)
       'semi': ['warn', 'always'],
       'semi-spacing': ['warn', { before: false, after: true }],
       // Импорты
-      'import/extensions': ['warn', 'ignore', { ts: 'never', js: 'always' }],
-      'import/order': 'error',
       // TS-specific
       '@typescript-eslint/no-unused-vars': 'warn'
     }
   }
-);
+]);

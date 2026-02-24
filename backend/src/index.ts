@@ -1,10 +1,13 @@
 import express from 'express';
 const app = express();
 import dotenv from 'dotenv';
+import authRouter from './routes/auth.route.js';
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+app.use('/api/auth', authRouter);
 app.get('/', (req, res) => {
   res.send(`
     <h1>Добро пожаловать на домашнюю страницу!</h1>
