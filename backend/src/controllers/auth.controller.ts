@@ -12,7 +12,6 @@ export class AuthController {
       if(!parseResult.success) {
         throw ErrorApi.BadRequest(parseResult.error.message);
       }
-      console.log(parseResult.data)
       const isExist = await userService.findOne({
         email: parseResult.data.email
       });
@@ -26,10 +25,7 @@ export class AuthController {
         httpOnly: true,
         sameSite: 'strict',
       });
-      res.status(201).json({
-        ...user,
-        password: undefined,
-      });
+      res.status(201).json(user);
     } catch (error) {
       next(error);
     }

@@ -9,7 +9,8 @@ class AuthService {
       data: {
         ...data,
         password: hashedPassword,
-      }
+      },
+      omit: { password: true }
     });
   }
 }
