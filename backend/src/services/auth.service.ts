@@ -1,8 +1,16 @@
-import { SignupDto } from "@/types/dto";
+import { Prisma } from "@/generated/prisma/client";
+import prisma from "@/utils/prisma-client";
+import bcrypt from "bcryptjs";
 
-export class AuthService {
-  async signup(dto:SignupDto) {
-    // logic
-    console.log(dto);
+class AuthService {
+  async create(data: Prisma.UserCreateInput) {
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    return await prisma.user.create({
+      data: {
+        ...data,
+        password: hashedPassword,
+      }
+    });
   }
 }
+export default new AuthService();
