@@ -14,11 +14,7 @@ app.use('/api/auth', authRouter);
 
 app.use(errorMiddleware);
 app.get('/', (req, res) => {
-  res.send(`
-    <h1>Добро пожаловать на домашнюю страницу!</h1>
-    <p>Сервер Express.js готов. Отправьте POST-запрос на / с JSON для теста.</p>
-    <pre>Пример: {"message": "Hello!"}</pre>
-  `);
+  res.send('chat api');
 });
 
 // Запуск сервера

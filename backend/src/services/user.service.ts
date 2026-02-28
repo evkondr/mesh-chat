@@ -5,7 +5,6 @@ class UserService {
   async findOne(where: Prisma.UserWhereUniqueInput) {
     return await prisma.user.findUnique({ 
       where,
-      omit: { password: true}
     });
   }
   async findAll() {
