@@ -5,6 +5,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./",
+    "typeRoots": ["./types", "./node_modules/@types"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
