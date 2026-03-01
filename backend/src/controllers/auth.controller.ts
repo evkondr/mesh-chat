@@ -24,7 +24,7 @@ export class AuthController {
         throw ErrorApi.BadRequest('User already exists');
       }
       const user = await authService.create(parseResult.data);
-      const token = await jwt.sign({userID: user.id}, process.env['JWT_SECRET'] as string, { expiresIn: '7d'});
+      const token = await jwt.sign({userId: user.id}, process.env['JWT_SECRET'] as string, { expiresIn: '7d'});
       setTokenCookie(res, token, 7 * 24 * 60 * 60 * 100);
       res.status(201).json(user);
     } catch (error) {
@@ -50,7 +50,7 @@ export class AuthController {
       if(!isPasswordCorrect) {
         throw ErrorApi.BadRequest('Wrong credentials');
       }
-      const token = await jwt.sign({userID: user.id}, process.env['JWT_SECRET'] as string, { expiresIn: '7d'});
+      const token = await jwt.sign({userId: user.id}, process.env['JWT_SECRET'] as string, { expiresIn: '7d'});
       setTokenCookie(res, token, 7 * 24 * 60 * 60 * 100);
       res.status(200).json(user);
     } catch (error) {

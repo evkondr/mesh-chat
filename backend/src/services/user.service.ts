@@ -12,5 +12,11 @@ class UserService {
       omit: { password: true}
     });
   }
+  async update(id: string, updates:Prisma.UserUpdateInput) {
+    return await prisma.user.update({
+      where: { id },
+      data: updates,
+    });
+  }
 }
 export default new UserService();
