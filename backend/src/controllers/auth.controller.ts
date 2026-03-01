@@ -4,6 +4,7 @@ import ErrorApi from "@/utils/errorApi";
 import { setTokenCookie } from "@/utils/setCookies";
 import { loginSchema, signupSchema } from "@/utils/validations/auth-validations";
 import { NextFunction, Request, Response } from "express";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export class AuthController {
@@ -37,7 +38,11 @@ export class AuthController {
         email: parseResult.data.email
       });
       if(!user) {
-        throw ErrorApi.NotFound('User not found');
+        throw ErrorApi.BadRequest('Wrong credentials');
+      }
+      const isPasswordCorrect = await bcrypt.compare(parseResult.data.password, user.password);
+      if(!isPasswordCorrect) {
+        throw ErrorApi.BadRequest('Wrong credentials');
       }
       const token = await jwt.sign({userID: user.id}, process.env['JWT_SECRET'] as string, { expiresIn: '7d'});
       setTokenCookie(res, token, 7 * 24 * 60 * 60 * 100);
