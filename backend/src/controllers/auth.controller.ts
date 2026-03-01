@@ -12,7 +12,10 @@ export class AuthController {
     try {
       const parseResult = signupSchema.safeParse(req.body);
       if(!parseResult.success) {
-        throw ErrorApi.BadRequest(parseResult.error.message);
+        const errorMessages = parseResult.error.issues.map(issue => 
+          `${issue.path.join('.')}: ${issue.message}`
+        ).toLocaleString();
+        throw ErrorApi.BadRequest(errorMessages);
       }
       const isExist = await userService.findOne({
         email: parseResult.data.email
@@ -32,7 +35,10 @@ export class AuthController {
     try {
       const parseResult = loginSchema.safeParse(req.body);
       if(!parseResult.success) {
-        throw ErrorApi.BadRequest(parseResult.error.message);
+        const errorMessages = parseResult.error.issues.map(issue => 
+          `${issue.path.join('.')}: ${issue.message}`
+        ).toLocaleString();
+        throw ErrorApi.BadRequest(errorMessages);
       }
       const user = await userService.findOne({
         email: parseResult.data.email
