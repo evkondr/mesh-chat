@@ -61,4 +61,12 @@ export class AuthController {
     res.clearCookie('token');
     res.status(200).json({ message: 'logout successful'});
   }
+  static checkAuth(req:Request, res:Response, next:NextFunction) {
+    try {
+      return res.status(200).json(req.user);
+    } catch (error) {
+      next(error);
+    }
+
+  }
 }
