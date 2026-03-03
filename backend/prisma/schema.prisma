@@ -13,11 +13,26 @@ datasource db {
   provider = "postgresql"
 }
 model User { 
-  id  String @unique @default(uuid())
-  email String  @unique
-  fullName  String @map("full_name")
-  password String
-  profilePic String @default("")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id                String @unique @default(uuid())
+  email             String  @unique
+  fullName          String @map("full_name")
+  password          String
+  profilePic        String @default("")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  sentMessages      Message[] @relation("UserSentMessages")
+  receivedMessages  Message[] @relation("UserReceivedMessages")
+
+}
+model Message {
+  id          String   @unique @default(uuid()) @id
+  senderId    String
+  receiverId  String
+  text        String?
+  image       String?
+  sender      User @relation("UserSentMessages", fields: [senderId], references: [id])
+  receiver    User @relation("UserReceivedMessages", fields: [receiverId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
 }
