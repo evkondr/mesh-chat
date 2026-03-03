@@ -8,6 +8,6 @@ messageRouter.get('/contacts', MessageController.getAllContacts);
 messageRouter.get('/chats', MessageController.getAllChats);
 messageRouter.get('/:id', MessageController.getMessagesByUserId);
 
-messageRouter.post('/send', MessageController.sendMessage);
+messageRouter.post('/send/:id', MessageController.sendMessage);
 
 export default messageRouter;
