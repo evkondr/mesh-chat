@@ -7,8 +7,9 @@ class UserService {
       where,
     });
   }
-  async findAll() {
+  async findAll(where?: Prisma.UserWhereInput) {
     return await prisma.user.findMany({
+      where,
       omit: { password: true}
     });
   }

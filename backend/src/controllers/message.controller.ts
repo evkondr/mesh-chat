@@ -1,9 +1,16 @@
+import userService from "@/services/user.service";
 import { NextFunction, Request, Response } from "express";
 
 export class MessageController {
   static async getAllContacts(req: Request, res: Response, next:NextFunction) {
     try {
-      res.status(200).json({});
+      const loggedInUser = req.user.id;
+      const contacts = await userService.findAll({
+       id: {
+        not: loggedInUser
+       }
+      });
+      res.status(200).json(contacts);
     } catch (error) {
       next(error);
     }

@@ -7,6 +7,7 @@ import errorMiddleware from './middleware/error.middleware.js';
 import userRouter from './routes/user.route.js';
 import fileUpload from 'express-fileupload';
 import limiter from './middleware/rate.limit.middleware.js';
+import messageRouter from './routes/message.route.js';
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
@@ -19,6 +20,8 @@ app.use(limiter);
 //ROUTES
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+app.use('/api/messages', messageRouter);
+
 
 app.use(errorMiddleware);
 app.get('/', (req, res) => {
