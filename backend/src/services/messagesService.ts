@@ -7,5 +7,10 @@ class MessagesService {
       where
     });
   }
+  async createMessage(data: Prisma.MessageCreateInput) {
+    return await prisma.message.create({
+      data,
+    });
+  }
 }
 export default new MessagesService();

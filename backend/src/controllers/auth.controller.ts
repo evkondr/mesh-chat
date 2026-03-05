@@ -18,7 +18,9 @@ export class AuthController {
         throw ErrorApi.BadRequest(errorMessages);
       }
       const isExist = await userService.findOne({
-        email: parseResult.data.email
+        where: {
+          email: parseResult.data.email
+        }
       });
       if(isExist) {
         throw ErrorApi.BadRequest('User already exists');
@@ -41,7 +43,9 @@ export class AuthController {
         throw ErrorApi.BadRequest(errorMessages);
       }
       const user = await userService.findOne({
-        email: parseResult.data.email
+        where: {
+          email: parseResult.data.email
+        }
       });
       if(!user) {
         throw ErrorApi.BadRequest('Wrong credentials');

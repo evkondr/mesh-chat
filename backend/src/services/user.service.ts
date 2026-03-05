@@ -2,9 +2,10 @@ import { Prisma } from "@/generated/prisma/client";
 import prisma from "@/utils/prisma-client";
 
 class UserService {
-  async findOne(where: Prisma.UserWhereUniqueInput) {
+  async findOne(args:{where: Prisma.UserWhereUniqueInput, include?: Prisma.UserInclude}) {
     return await prisma.user.findUnique({ 
-      where,
+      where: args.where,
+      include: args.include
     });
   }
   async findAll(where?: Prisma.UserWhereInput) {

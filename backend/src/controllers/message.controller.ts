@@ -1,6 +1,8 @@
 import messagesService from "@/services/messagesService";
 import userService from "@/services/user.service";
 import ErrorApi from "@/utils/errorApi";
+import s3Client from "@/utils/s3-client";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { NextFunction, Request, Response } from "express";
 
 export class MessageController {
@@ -29,7 +31,9 @@ export class MessageController {
       const loggedInUserId = req.user.id;
       const { id:receiverId } = req.params as { id: string};
       const user = await userService.findOne({
-        id:receiverId
+        where: {
+          id:receiverId
+        }
       });
       if(!user) {
         throw ErrorApi.NotFound('User not found');
@@ -51,7 +55,43 @@ export class MessageController {
   }
   static async sendMessage(req: Request, res: Response, next:NextFunction) {
     try {
-      res.status(200).json({});
+      const senderId = req.user.id;
+      const {id:receiverId} = req.params as { id: string};
+      const user = await userService.findOne({
+        where: {
+          id:receiverId
+        }
+      });
+      if(!user) {
+        throw ErrorApi.NotFound('User not found');
+      }
+      const { text } = req.body;
+      let imageUrl = '';
+      if(req.files?.imageUrl) {
+        const file = req.files?.imageUrl;
+        if(!Array.isArray(file)){
+          const fileName = req.user.id + '.' + file.name.split('.').at(-1);
+          await s3Client.send(new PutObjectCommand({
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: fileName,
+            Body: file.data
+          }));
+          imageUrl = `${process.env.AWS_ENDPOINT}/${process.env.AWS_BUCKET_NAME}/${fileName}`; 
+        }
+      }
+      const message = await messagesService.createMessage({
+        receiver: {
+          connect: { id: receiverId}
+        },
+        sender: {
+          connect: {
+            id: senderId
+          }
+        },
+        text,
+        image: imageUrl
+      });
+      res.status(200).json(message);
     } catch (error) {
       next(error);
     }
