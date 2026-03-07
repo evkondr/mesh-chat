@@ -78,6 +78,7 @@ export class MessageController {
     try {
       const senderId = req.user.id;
       const {id:receiverId} = req.params as { id: string};
+      const { text } = req.body;
       const user = await userService.findOne({
         where: {
           id:receiverId
@@ -86,7 +87,12 @@ export class MessageController {
       if(!user) {
         throw ErrorApi.NotFound('User not found');
       }
-      const { text } = req.body;
+      if(senderId == receiverId) {
+        throw ErrorApi.BadRequest('Can\'t send message to your self');
+      }
+      if(!text) {
+        throw ErrorApi.NotFound('Message can\'t be empty');
+      }
       let imageUrl = '';
       if(req.files?.image) {
         const file = req.files?.image;

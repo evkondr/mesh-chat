@@ -28,7 +28,7 @@ model Message {
   id          String   @unique @default(uuid()) @id
   senderId    String
   receiverId  String
-  text        String?
+  text        String? @db.VarChar(2000)
   image       String?
   sender      User @relation("UserSentMessages", fields: [senderId], references: [id])
   receiver    User @relation("UserReceivedMessages", fields: [receiverId], references: [id])

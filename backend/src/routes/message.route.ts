@@ -4,11 +4,12 @@ import { Router } from "express";
 
 
 const messageRouter = Router();
+messageRouter.use(authMiddleware);
 
-messageRouter.get('/contacts', authMiddleware, MessageController.getAllContacts);
-messageRouter.get('/chats', authMiddleware, MessageController.getAllChats);
-messageRouter.get('/:id', authMiddleware, MessageController.getMessagesByUserId);
+messageRouter.get('/contacts',  MessageController.getAllContacts);
+messageRouter.get('/chats', MessageController.getAllChats);
+messageRouter.get('/:id', MessageController.getMessagesByUserId);
 
-messageRouter.post('/send/:id', authMiddleware, MessageController.sendMessage);
+messageRouter.post('/send/:id', MessageController.sendMessage);
 
 export default messageRouter;
