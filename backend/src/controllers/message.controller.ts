@@ -67,8 +67,8 @@ export class MessageController {
       }
       const { text } = req.body;
       let imageUrl = '';
-      if(req.files?.imageUrl) {
-        const file = req.files?.imageUrl;
+      if(req.files?.image) {
+        const file = req.files?.image;
         if(!Array.isArray(file)){
           const fileName = req.user.id + '.' + file.name.split('.').at(-1);
           await s3Client.send(new PutObjectCommand({
