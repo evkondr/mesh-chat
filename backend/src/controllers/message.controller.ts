@@ -21,7 +21,26 @@ export class MessageController {
   }
   static async getAllChats(req: Request, res: Response, next:NextFunction) {
     try {
-      res.status(200).json({});
+      const loggedInUserId = req.user.id;
+      const messages = await messagesService.getMessages({
+        where: {
+          OR: [
+            {
+              senderId: loggedInUserId
+            },
+            {
+              receiverId: loggedInUserId
+            }
+          ]
+        }
+      });
+      const chatIds = [...new Set(messages.map((msg) => msg.senderId === loggedInUserId ? msg.receiverId : msg.senderId))];
+      const chatUsers = await userService.findAll({
+        id: {
+          in: chatIds
+        }
+      });
+      res.status(200).json(chatUsers);
     } catch (error) {
       next(error);
     }
@@ -39,14 +58,16 @@ export class MessageController {
         throw ErrorApi.NotFound('User not found');
       }
       const messages = await messagesService.getMessages({
-        OR: [
-          {
-            receiverId: receiverId
-          },
-          {
-            senderId: loggedInUserId
-          }
-        ]
+        where: {
+          OR: [
+             {
+              receiverId: receiverId
+            },
+            {
+              senderId: loggedInUserId
+            }
+          ]
+        }
       });
       res.status(200).json(messages);
     } catch (error) {

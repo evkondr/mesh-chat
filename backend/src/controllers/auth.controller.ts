@@ -56,7 +56,10 @@ export class AuthController {
       }
       const token = await jwt.sign({userId: user.id}, process.env['JWT_SECRET'] as string, { expiresIn: '7d'});
       setTokenCookie(res, token, 7 * 24 * 60 * 60 * 100);
-      res.status(200).json(user);
+      res.status(200).json({
+        ...user,
+        password: undefined
+      });
     } catch (error) {
       next(error);
     }

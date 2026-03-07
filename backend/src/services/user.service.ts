@@ -5,7 +5,7 @@ class UserService {
   async findOne(args:{where: Prisma.UserWhereUniqueInput, include?: Prisma.UserInclude}) {
     return await prisma.user.findUnique({ 
       where: args.where,
-      include: args.include
+      include: args.include,
     });
   }
   async findAll(where?: Prisma.UserWhereInput) {
