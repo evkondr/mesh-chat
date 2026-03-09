@@ -1,7 +1,7 @@
-import { Route, Routes } from "react-router"
-import ChatPage from "./pages/ChatPage"
-import LoginPage from "./pages/LoginPage"
-import SignUpPage from "./pages/SignUpPage"
+import { Route, Routes } from "react-router";
+import ChatPage from "./pages/ChatPage";
+import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./pages/SignUpPage";
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
       </Routes>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
