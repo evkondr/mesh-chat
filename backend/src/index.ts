@@ -8,14 +8,20 @@ import userRouter from './routes/user.route.js';
 import fileUpload from 'express-fileupload';
 import limiter from './middleware/rate.limit.middleware.js';
 import messageRouter from './routes/message.route.js';
+import cors from 'cors';
+
 dotenv.config();
 const PORT = process.env.PORT || 3000;
-
+console.log(process.env.CLIENT_URL)
 app.use(express.json({ limit: '50mb'}));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 app.use(fileUpload());
 app.use(limiter);
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true
+}));
 
 //ROUTES
 app.use('/api/auth', authRouter);
