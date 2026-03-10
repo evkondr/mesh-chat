@@ -1,18 +1,16 @@
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { Navigate } from "react-router";
+import Preloader from "./Preloader";
 
 
 type Props = {
   children: ReactNode
 }
 const ProtectedRoute = ({ children }:Props) => {
-  const { isCheckingAuth, checkAuth, authUser} = useAuthStore();
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+  const { isCheckingAuth, authUser} = useAuthStore();
   if(isCheckingAuth) {
-    return <p>loading</p>;
+    return (<Preloader />);
   }
   return (
     authUser ? children : (<Navigate to="/login" />)
