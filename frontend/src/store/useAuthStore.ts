@@ -22,7 +22,14 @@ const useAuthStore = create<AuthStore>((set) => ({
         authUser: res.data
       });
     } catch (error) {
-      console.log('Error in auth check',error);
+      if(isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else if(error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Something went wrong. Check console');
+        console.error('Error in auth check', error);
+      }
     } finally {
       set({ isCheckingAuth: false});
     }

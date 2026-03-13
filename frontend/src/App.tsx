@@ -7,12 +7,11 @@ import { useEffect } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  const { checkAuth, authUser } = useAuthStore();
+  const { checkAuth } = useAuthStore();
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  console.log(authUser);
   return (
     <div className="min-h-screen bg-slate-900 relative flex items-center justify-center p 4 overflow-hidden">
       <Routes>
