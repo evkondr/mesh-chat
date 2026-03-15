@@ -24,9 +24,9 @@ const AuthPage = () => {
                   <p className="text-slate-400">Sign up for a new account</p>
                 </div>
                 {isLoginPage ? (
-                  <SignUpForm />
-                ) : (
                   <LoginForm />
+                ) : (
+                  <SignUpForm />
                 )}
                 <div className="mt-6 text-center">
                   <div className="auth-link" onClick={() => setIsLoginPage(!isLoginPage)}>

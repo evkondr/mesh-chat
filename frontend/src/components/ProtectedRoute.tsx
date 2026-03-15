@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children }:Props) => {
     return (<Preloader />);
   }
   return (
-    authUser ? children : (<Navigate to="/login" />)
+    authUser ? children : (<Navigate to="/authorization" />)
   );
 };
 

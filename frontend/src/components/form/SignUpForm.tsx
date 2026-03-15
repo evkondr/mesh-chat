@@ -9,8 +9,10 @@ const SignUpForm = () => {
     register,
     handleSubmit,
   } = useForm<SignUpDto>();
-  const { isSigningUp } = useAuthStore();
-  const onSubmit: SubmitHandler<SignUpDto> = (data) => console.log(data);
+  const { isSigningUp, signup } = useAuthStore();
+  const onSubmit: SubmitHandler<SignUpDto> = (data) => {
+    signup(data);
+  };
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <ChatInput
