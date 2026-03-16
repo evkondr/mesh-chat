@@ -72,10 +72,25 @@ const useAuthStore = create<AuthStore>((set) => ({
       } else {
         toast.error('Something went wrong. Check console');
         console.error('Error in auth check', error);
-      }
-      
+      } 
     } finally {
       set({ isLoggingIn: false });
+    }
+  },
+  async logout() {
+    try {
+      await axiosInstance.post('/auth/logout');
+      set({ authUser: null });
+      toast.success("Logged out successfully");
+    } catch (error) {
+      if(isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else if(error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Something went wrong. Check console');
+        console.error('Error in auth check', error);
+      }
     }
   }
 }));
