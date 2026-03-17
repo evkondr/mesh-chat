@@ -21,9 +21,9 @@ const useAuthStore = create<AuthStore>((set) => ({
   isLoggingIn: false,
   async checkAuth() {
     try {
-      const res = await axiosInstance.get<User>('/auth/check');
+      const { data }= await axiosInstance.get<User>('/auth/check');
       set({
-        authUser: res.data
+        authUser: data
       });
     } catch (error) {
       if(isAxiosError(error)) {
@@ -38,11 +38,11 @@ const useAuthStore = create<AuthStore>((set) => ({
       set({ isCheckingAuth: false});
     }
   },
-  async signup(data:SignUpDto) {
+  async signup(dto:SignUpDto) {
     try {
       set({ isSigningUp: true });
-      const res = await axiosInstance.post<User>('/auth/signup', data);
-      set({ authUser: res.data});
+      const { data }= await axiosInstance.post<User>('/auth/signup', dto);
+      set({ authUser: data});
       toast.success('Account created successfully');
     } catch (error) {
       if(isAxiosError(error)) {
@@ -58,11 +58,11 @@ const useAuthStore = create<AuthStore>((set) => ({
       set({ isSigningUp: false });
     }
   },
-  async login(data:LoginDto) {
+  async login(dto:LoginDto) {
     try {
       set({ isLoggingIn: true });
-      const res = await axiosInstance.post<User>('/auth/login', data);
-      set({ authUser: res.data});
+      const { data } = await axiosInstance.post<User>('/auth/login', dto);
+      set({ authUser: data});
       toast.success('Account created successfully');
     } catch (error) {
       if(isAxiosError(error)) {
