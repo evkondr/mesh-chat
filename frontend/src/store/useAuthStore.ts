@@ -13,6 +13,7 @@ type AuthStore = {
   checkAuth: () => void
   signup: (data:SignUpDto) => void
   login: (data:LoginDto) => void
+  logout: () => void
 }
 const useAuthStore = create<AuthStore>((set) => ({
   authUser: null,
