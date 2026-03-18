@@ -63,7 +63,7 @@ const useAuthStore = create<AuthStore>((set) => ({
       set({ isLoggingIn: true });
       const { data } = await axiosInstance.post<User>('/auth/login', dto);
       set({ authUser: data});
-      toast.success('Account created successfully');
+      toast.success('Successfully logged in');
     } catch (error) {
       if(isAxiosError(error)) {
         toast.error(error.response?.data.message);

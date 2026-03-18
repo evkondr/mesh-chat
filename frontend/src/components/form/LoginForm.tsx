@@ -2,7 +2,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import useAuthStore from "../../store/useAuthStore";
 import type { SignUpDto } from "../../types/dto";
 import ChatInput from "./ChatInput";
-import { LoaderIcon, MailIcon } from "lucide-react";
+import { LoaderIcon, LockIcon, MailIcon } from "lucide-react";
 
 const LoginForm = () => {
   const {
@@ -22,10 +22,11 @@ const LoginForm = () => {
         labelText="Email"
       />
       <ChatInput
-        name="fullName"
+        name="password"
+        type="password"
         register={register}
-        icon={<MailIcon className="auth-input-icon"/>}
-        labelText="Full name"
+        icon={<LockIcon className="auth-input-icon"/>}
+        labelText="Password"
       />
       <button className="auth-btn" type="submit" disabled={isLoggingIn}>
         {isLoggingIn ? (

@@ -1,6 +1,8 @@
 const ChatPage = () => {
   return (
-    <div>ChatPage</div>
+    <div className="relative w-full max-w-6xl h-[800px]">
+      
+    </div>
   );
 };
 
