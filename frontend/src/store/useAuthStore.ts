@@ -10,16 +10,19 @@ type AuthStore = {
   isCheckingAuth: boolean
   isSigningUp: boolean
   isLoggingIn: boolean
+  isProfileUpdating: boolean,
   checkAuth: () => void
   signup: (data:SignUpDto) => void
   login: (data:LoginDto) => void
   logout: () => void
+  updateProfile: (data:File) => void
 }
 const useAuthStore = create<AuthStore>((set) => ({
   authUser: null,
   isCheckingAuth: true,
   isSigningUp: false,
   isLoggingIn: false,
+  isProfileUpdating: false,
   async checkAuth() {
     try {
       const { data }= await axiosInstance.get<User>('/auth/check');
@@ -92,6 +95,30 @@ const useAuthStore = create<AuthStore>((set) => ({
         toast.error('Something went wrong. Check console');
         console.error('Error in auth check', error);
       }
+    }
+  },
+  async updateProfile(updateData:File) {
+    try {
+      const formData = new FormData();
+      set({ isProfileUpdating: true});
+      formData.append('profilePic', updateData);
+      const { data } = await axiosInstance.patch<User>('/user/update-profile', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      set({ authUser: data });
+    } catch (error) {
+      if(isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else if(error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Something went wrong. Check console');
+        console.error('Error in auth check', error);
+      }
+    }finally {
+      set({ isProfileUpdating: false});
     }
   }
 }));

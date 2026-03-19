@@ -1,14 +1,19 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import useAuthStore from "../store/useAuthStore";
 import useChatStore from "../store/useChatStore";
-import { LogOutIcon, Volume2Icon, VolumeOffIcon } from "lucide-react";
+import { Loader, LogOutIcon, Volume2Icon, VolumeOffIcon } from "lucide-react";
 const mouseClickSound = new Audio("/src/assets/sounds/mouse-click.mp3");
 const ProfileHeader = () => {
-  const { logout, authUser } = useAuthStore();
+  const { logout, authUser, updateProfile, isProfileUpdating } = useAuthStore();
   const { isSoundEnabled, toggleSound } = useChatStore();
-  const [selectedImg, setSelectedImg] = useState(null);
+  // const [selectedImg, setSelectedImg] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const handleImageUpload = (e) => {}
+  const handleImageUpload = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if(!file) return;
+    // setSelectedImg(file);
+    updateProfile(file);
+  };
   return (
     <div className="p-6 border-b border-slate-700/50">
       <div className="flex items-center justify-between">
@@ -20,13 +25,18 @@ const ProfileHeader = () => {
               onClick={() => fileInputRef.current?.click()}
             >
               <img
-                src={selectedImg || authUser?.profilePic || "/src/assets/avatar.png"}
+                src={authUser?.profilePic || "/src/assets/avatar.png"}
                 alt="User image"
                 className="size-full object-cover"
               />
               <div className="absolute rounded-full inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                 <span className="text-white text-xs">Change</span>
               </div>
+              {isProfileUpdating && (
+                <div className="absolute rounded-full inset-0 bg-black/50 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                  <Loader className="animate-spin" />
+                </div>
+              )}
             </button>
             <input
               type="file"

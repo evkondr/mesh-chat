@@ -76,7 +76,7 @@ const useChatStore = create<ChatStore>((set, get) => ({
     } finally {
       set({ isUsersLoading: false });
     }
-  }
+  },
 }));
 
 export default useChatStore;
