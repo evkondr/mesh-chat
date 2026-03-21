@@ -18,20 +18,20 @@ const SignUpForm = () => {
       <ChatInput
         name="fullName"
         register={register}
-        icon={<UserIcon className="auth-input-icon"/>}
+        icon={<UserIcon className="input-icon"/>}
         labelText="Full name"
       />
       <ChatInput
         name="email"
         register={register}
-        icon={<MailIcon className="auth-input-icon"/>}
+        icon={<MailIcon className="input-icon"/>}
         labelText="Email"
       />
       <ChatInput
         name="password"
         type="password"
         register={register}
-        icon={<LockIcon className="auth-input-icon"/>}
+        icon={<LockIcon className="input-icon"/>}
         labelText="Password"
       />
       <button type="submit" className="auth-btn" disabled={isSigningUp}>

@@ -8,11 +8,16 @@ import { NextFunction, Request, Response } from "express";
 export class MessageController {
   static async getAllContacts(req: Request, res: Response, next:NextFunction) {
     try {
+      const searchParam = req.query.search as string;
       const loggedInUser = req.user.id;
       const contacts = await userService.findAll({
        id: {
         not: loggedInUser
-       }
+       },
+       fullName: {
+        contains: searchParam || '',
+        mode: 'insensitive'
+       },
       });
       res.status(200).json(contacts);
     } catch (error) {
