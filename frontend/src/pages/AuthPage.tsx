@@ -19,18 +19,18 @@ const AuthPage = () => {
                 <div className="text-center mb-8">
                   <MessageCircleIcon className="w-12 h-12 mx-auto text-slate-400 mn-4" />
                   <h2 className="text-2xl font-bold text-slate-200 mb-2">
-                    {isLoginPage ? 'Welcome Back' : 'Create Account'}
+                    {!isLoginPage ? 'Welcome Back' : 'Create Account'}
                   </h2>
                   <p className="text-slate-400">Sign up for a new account</p>
                 </div>
-                {isLoginPage ? (
+                {!isLoginPage ? (
                   <LoginForm />
                 ) : (
                   <SignUpForm />
                 )}
                 <div className="mt-6 text-center">
                   <div className="auth-link" onClick={() => setIsLoginPage(!isLoginPage)}>
-                    {isLoginPage ? 'Don\'t have an account? Sign Up' : 'Already have an account? Login'}.
+                    {!isLoginPage ? 'Don\'t have an account? Sign Up' : 'Already have an account? Login'}.
                   </div>
                 </div>
               </div>

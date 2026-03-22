@@ -17,8 +17,9 @@ type ChatStore = {
   toggleSound: () => void
   setActiveTab: (tab:Tab) => void
   setSelectedUser: (user:User) => void
-  getAllContacts: () => void
+  getAllContacts: (searchValue:string) => void
   getChatPartners: () => void
+  clearContacts: () => void
 };
 
 const useChatStore = create<ChatStore>((set, get) => ({
@@ -41,10 +42,10 @@ const useChatStore = create<ChatStore>((set, get) => ({
   setSelectedUser(user) {
     set({ selectedUser: user});
   },
-  async getAllContacts() {
+  async getAllContacts(searchValue:string) {
     try {
       set({ isUsersLoading: true });
-      const { data } = await axiosInstance.get<User[]>('/messages/contacts');
+      const { data } = await axiosInstance.get<User[]>(`/messages/contacts?search=${searchValue}`);
       set({ allContacts: data});
     } catch (error) {
       if(isAxiosError(error)) {
@@ -77,6 +78,9 @@ const useChatStore = create<ChatStore>((set, get) => ({
       set({ isUsersLoading: false });
     }
   },
+  clearContacts: () => {
+    set({ allContacts: []});
+  }
 }));
 
 export default useChatStore;
