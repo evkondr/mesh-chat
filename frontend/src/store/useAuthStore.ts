@@ -31,7 +31,7 @@ const useAuthStore = create<AuthStore>((set) => ({
       });
     } catch (error) {
       if(isAxiosError(error)) {
-        toast.error(error.response?.data.message);
+        toast.error(error.response?.data.message || error.message);
       } else if(error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -50,7 +50,7 @@ const useAuthStore = create<AuthStore>((set) => ({
       toast.success('Account created successfully');
     } catch (error) {
       if(isAxiosError(error)) {
-        toast.error(error.response?.data.message);
+        toast.error(error.response?.data.message || error.message);
       } else if(error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -70,7 +70,7 @@ const useAuthStore = create<AuthStore>((set) => ({
       toast.success('Successfully logged in');
     } catch (error) {
       if(isAxiosError(error)) {
-        toast.error(error.response?.data.message);
+        toast.error(error.response?.data.message || error.message);
       } else if(error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -88,7 +88,7 @@ const useAuthStore = create<AuthStore>((set) => ({
       toast.success("Logged out successfully");
     } catch (error) {
       if(isAxiosError(error)) {
-        toast.error(error.response?.data.message);
+        toast.error(error.response?.data.message || error.message);
       } else if(error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -110,7 +110,7 @@ const useAuthStore = create<AuthStore>((set) => ({
       set({ authUser: data });
     } catch (error) {
       if(isAxiosError(error)) {
-        toast.error(error.response?.data.message);
+        toast.error(error.response?.data.message || error.message);
       } else if(error instanceof Error) {
         toast.error(error.message);
       } else {
