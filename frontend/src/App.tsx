@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthPage from "./pages/AuthPage";
 import { Toaster } from "react-hot-toast";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   const { checkAuth, authUser } = useAuthStore();
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
         <Route path="/authorization" element={!authUser ? (<AuthPage />) : (<Navigate to="/" />)} />
+        <Route path="*" element={<NotFoundPage />}/>
       </Routes>
     </div>
   );
