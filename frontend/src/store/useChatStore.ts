@@ -3,12 +3,13 @@ import type { User } from '../types';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import axiosInstance from '../lib/axiosInstance';
+import type { Message } from 'react-hook-form';
 
 type Tab = 'chats' | 'contacts';
 type ChatStore = {
   allContacts: User[]
   chats: User[]
-  messages: []
+  messages: Message[]
   activeTab: Tab
   selectedUser: User | null
   isUsersLoading: boolean
@@ -16,10 +17,11 @@ type ChatStore = {
   isSoundEnabled: boolean
   toggleSound: () => void
   setActiveTab: (tab:Tab) => void
-  setSelectedUser: (user:User) => void
+  setSelectedUser: (user:User | null) => void
   getAllContacts: (searchValue:string) => void
   getChatPartners: () => void
   clearContacts: () => void
+  getMessagesByUserId: (userId:string) => void
 };
 
 const useChatStore = create<ChatStore>((set, get) => ({
@@ -80,6 +82,24 @@ const useChatStore = create<ChatStore>((set, get) => ({
   },
   clearContacts: () => {
     set({ allContacts: []});
+  },
+  async getMessagesByUserId(userId:string) {
+    try {
+      set({ isMessagesLoading: true });
+      const { data } = await axiosInstance.get<Message[]>(`/messages/${userId}`);
+      set({messages: data});
+    } catch (error) {
+      if(isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else if(error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Something went wrong. Check console');
+        console.error('Error in auth check', error);
+      }
+    } finally {
+      set({ isMessagesLoading: false});
+    }
   }
 }));
 

@@ -13,7 +13,7 @@ datasource db {
   provider = "postgresql"
 }
 model User { 
-  id                String @unique @default(uuid())
+  id                String @unique @default(uuid()) @id
   email             String  @unique
   fullName          String @map("full_name")
   password          String
