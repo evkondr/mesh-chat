@@ -65,12 +65,8 @@ export class MessageController {
       const messages = await messagesService.getMessages({
         where: {
           OR: [
-             {
-              receiverId: receiverId
-            },
-            {
-              senderId: loggedInUserId
-            }
+            { senderId: loggedInUserId, receiverId: receiverId },
+            { senderId: receiverId, receiverId: loggedInUserId },
           ]
         }
       });

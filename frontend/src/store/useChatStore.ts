@@ -1,9 +1,8 @@
 import { create } from 'zustand';
-import type { User } from '../types';
+import type { Message, User } from '../types';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import axiosInstance from '../lib/axiosInstance';
-import type { Message } from 'react-hook-form';
 
 type Tab = 'chats' | 'contacts';
 type ChatStore = {
