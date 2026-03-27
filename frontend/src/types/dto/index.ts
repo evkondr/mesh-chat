@@ -4,3 +4,8 @@ export type SignUpDto = {
   password: string
 }
 export type LoginDto = Omit<SignUpDto, 'fullName'>
+
+export type SendMessageDto = {
+  text: string
+  image?: File
+}

@@ -20,7 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
         <Route path="/authorization" element={!authUser ? (<AuthPage />) : (<Navigate to="/" />)} />
-        <Route path="*" element={<NotFoundPage />}/>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
   );
