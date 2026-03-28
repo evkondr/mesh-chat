@@ -51,7 +51,7 @@ const useChatStore = create<ChatStore>((set, get) => ({
       set({ allContacts: data});
     } catch (error) {
       if(isAxiosError(error)) {
-        toast.error(error.response?.data.message);
+        toast.error(error.response?.data.message || error.message);
       } else if(error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -69,7 +69,7 @@ const useChatStore = create<ChatStore>((set, get) => ({
       set({ chats: data});
     } catch (error) {
       if(isAxiosError(error)) {
-        toast.error(error.response?.data.message);
+        toast.error(error.response?.data.message || error.message);
       } else if(error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -90,7 +90,7 @@ const useChatStore = create<ChatStore>((set, get) => ({
       set({messages: data});
     } catch (error) {
       if(isAxiosError(error)) {
-        toast.error(error.response?.data.message);
+        toast.error(error.response?.data.message || error.message);
       } else if(error instanceof Error) {
         toast.error(error.message);
       } else {
@@ -113,7 +113,7 @@ const useChatStore = create<ChatStore>((set, get) => ({
       
     } catch (error) {
       if(isAxiosError(error)) {
-        toast.error(error.response?.data.message);
+        toast.error(error.response?.data.message || error.message);
       } else if(error instanceof Error) {
         toast.error(error.message);
       } else {
