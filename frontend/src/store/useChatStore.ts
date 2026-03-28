@@ -46,9 +46,9 @@ const useChatStore = create<ChatStore>((set, get) => ({
   },
   async getAllContacts(searchValue:string) {
     try {
-      
+      set({ isUsersLoading: true });
       const { data } = await axiosInstance.get(`/messages/contacts?search=${searchValue}`);
-      set({ messages: data});
+      set({ allContacts: data});
     } catch (error) {
       if(isAxiosError(error)) {
         toast.error(error.response?.data.message);
@@ -103,12 +103,13 @@ const useChatStore = create<ChatStore>((set, get) => ({
   },
   async sendMessage(data: {receiverId: string, dto:FormData}) {
     try {
-    
-      const { message } = await axiosInstance.post<Message[]>(`/messages/send/${data.receiverId}`, data.dto, {
+      const { messages } = get();
+      const resp = await axiosInstance.post<Message>(`/messages/send/${data.receiverId}`, data.dto, {
         headers: {
           "Content-Type": "multipart/form-data",
         }
       });
+      set({ messages: messages.concat(resp.data)});
       
     } catch (error) {
       if(isAxiosError(error)) {
