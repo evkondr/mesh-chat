@@ -3,13 +3,18 @@ import { useRef, useState, type ChangeEvent } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
 import type { SendMessageDto } from "../types/dto";
+import useChatStore from "../store/useChatStore";
 
 const MessageInput = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(null);
+  const [file, setFile] = useState<File | string>('');
+  const { sendMessage, selectedUser }  = useChatStore();
+
   const {
     register,
     handleSubmit,
+    reset,
     watch
   } = useForm<SendMessageDto>({
     defaultValues:{
@@ -23,6 +28,9 @@ const MessageInput = () => {
       toast.error("Please select an image file");
       return;
     }
+    
+    if(file) setFile(file);
+
     const reader = new FileReader();
     reader.onloadend = () => setImagePreview(reader.result);
     reader.readAsDataURL(file as File);
@@ -32,7 +40,14 @@ const MessageInput = () => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
   const onSubmit: SubmitHandler<SendMessageDto> = (data) => {
-    console.log(data);
+    const formData = new FormData();
+    formData.append('text', data.text);
+    if (imagePreview) {
+      formData.append('image', file);
+    }
+    sendMessage({ receiverId: selectedUser?.id as string, dto: formData});
+    setImagePreview(null);
+    reset();
   };
   return (
     <div className="p-4 border-t border-slate-700/50">
@@ -54,7 +69,10 @@ const MessageInput = () => {
           </div>
         </div>
       )}
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-3xl mx-auto flex space-x-4">
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(onSubmit)();
+      }} className="max-w-3xl mx-auto flex space-x-4">
         <input
           type="text"
           {...register("text")}

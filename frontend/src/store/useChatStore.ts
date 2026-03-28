@@ -21,6 +21,7 @@ type ChatStore = {
   getChatPartners: () => void
   clearContacts: () => void
   getMessagesByUserId: (userId:string) => void
+  sendMessage: (data:{receiverId: string, dto:FormData}) => void
 };
 
 const useChatStore = create<ChatStore>((set, get) => ({
@@ -45,9 +46,9 @@ const useChatStore = create<ChatStore>((set, get) => ({
   },
   async getAllContacts(searchValue:string) {
     try {
-      set({ isUsersLoading: true });
-      const { data } = await axiosInstance.get<User[]>(`/messages/contacts?search=${searchValue}`);
-      set({ allContacts: data});
+      
+      const { data } = await axiosInstance.get(`/messages/contacts?search=${searchValue}`);
+      set({ messages: data});
     } catch (error) {
       if(isAxiosError(error)) {
         toast.error(error.response?.data.message);
@@ -87,6 +88,28 @@ const useChatStore = create<ChatStore>((set, get) => ({
       set({ isMessagesLoading: true });
       const { data } = await axiosInstance.get<Message[]>(`/messages/${userId}`);
       set({messages: data});
+    } catch (error) {
+      if(isAxiosError(error)) {
+        toast.error(error.response?.data.message);
+      } else if(error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Something went wrong. Check console');
+        console.error('Error in auth check', error);
+      }
+    } finally {
+      set({ isMessagesLoading: false});
+    }
+  },
+  async sendMessage(data: {receiverId: string, dto:FormData}) {
+    try {
+    
+      const { message } = await axiosInstance.post<Message[]>(`/messages/send/${data.receiverId}`, data.dto, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }
+      });
+      
     } catch (error) {
       if(isAxiosError(error)) {
         toast.error(error.response?.data.message);

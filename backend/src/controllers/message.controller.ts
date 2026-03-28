@@ -91,7 +91,7 @@ export class MessageController {
       if(senderId == receiverId) {
         throw ErrorApi.BadRequest('Can\'t send message to your self');
       }
-      if(!text) {
+      if(!text && !req.files?.image) {
         throw ErrorApi.NotFound('Message can\'t be empty');
       }
       let imageUrl = '';
