@@ -1,5 +1,4 @@
 import express from 'express';
-const app = express();
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/auth.route.js';
@@ -9,6 +8,8 @@ import fileUpload from 'express-fileupload';
 import limiter from './middleware/rate.limit.middleware.js';
 import messageRouter from './routes/message.route.js';
 import cors from 'cors';
+import { app, server } from './utils/socket.js';
+
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -34,7 +35,7 @@ app.get('/', (req, res) => {
 });
 
 // Запуск сервера
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
