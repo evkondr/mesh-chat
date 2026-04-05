@@ -1,16 +1,18 @@
+import useAuthStore from '../store/useAuthStore';
 import type { User } from '../types';
 type IProps = {
   contact: User,
   onClick?: () => void,
 }
 const UserCard = ({contact, onClick}:IProps) => {
+  const { onlineUsers } = useAuthStore();
   return (
     <div
       className="bg-cyan-500/10 p-4 rounded-lg cursor-pointer hover:bg-cyan-500/20 transition-colors"
       onClick={onClick}
     >
       <div className="flex items-center gap-3">
-        <div className={`avatar online`}>
+        <div className={`avatar ${onlineUsers.includes(contact.id) ? 'avatar-online' : 'avatar-offline'}`}>
           <div className="size-12 rounded-full">
             <img src={contact.profilePic || "/avatar.png"} />
           </div>
