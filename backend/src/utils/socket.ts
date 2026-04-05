@@ -1,4 +1,4 @@
-import socketAuthMiddleware from '@/middleware/socketAuthMiddleware';
+import socketAuthMiddleware from '@/middleware/socket.auth.middleware';
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
