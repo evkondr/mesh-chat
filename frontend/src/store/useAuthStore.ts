@@ -20,6 +20,7 @@ type AuthStore = {
   logout: () => void
   updateProfile: (data:File) => void
   connectSocket: () => void,
+  disconnectSocket: () => void,
 }
 const BASE_URL = import.meta.env.MODE == 'development' ? import.meta.env.VITE_BASE_SOCKET_URL : '/';
 const useAuthStore = create<AuthStore>((set, get)=> ({
@@ -96,6 +97,7 @@ const useAuthStore = create<AuthStore>((set, get)=> ({
       await axiosInstance.post('/auth/logout');
       set({ authUser: null });
       toast.success("Logged out successfully");
+      get().disconnectSocket();
     } catch (error) {
       if(isAxiosError(error)) {
         toast.error(error.response?.data.message || error.message);
@@ -149,6 +151,11 @@ const useAuthStore = create<AuthStore>((set, get)=> ({
     socket.on("connect_error", (err) => {
       console.log("Connection error:", err.message);
     });
+  },
+  disconnectSocket() {
+    if(get().socket?.connect) {
+      get().socket?.disconnect();
+    }
   }
 }));
 
