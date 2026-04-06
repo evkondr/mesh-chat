@@ -2,6 +2,7 @@ import messagesService from "@/services/messagesService";
 import userService from "@/services/user.service";
 import ErrorApi from "@/utils/errorApi";
 import s3Client from "@/utils/s3-client";
+import { getReceiverId, io } from "@/utils/socket";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { NextFunction, Request, Response } from "express";
 
@@ -98,7 +99,7 @@ export class MessageController {
       if(req.files?.image) {
         const file = req.files?.image;
         if(!Array.isArray(file)){
-          const fileName = req.user.id + '.' + file.name.split('.').at(-1);
+          const fileName = req.user.id + Date.now() + '.' + file.name.split('.').at(-1);
           await s3Client.send(new PutObjectCommand({
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: fileName,
@@ -119,6 +120,9 @@ export class MessageController {
         text,
         image: imageUrl
       });
+      const receiverSocketId = getReceiverId(receiverId);
+      console.log('receiverSocketId', receiverSocketId)
+      io.to(receiverSocketId).emit('newMessage', message);
       res.status(200).json(message);
     } catch (error) {
       next(error);

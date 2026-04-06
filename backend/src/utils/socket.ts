@@ -17,6 +17,10 @@ io.use(socketAuthMiddleware);
 
 const onlineUsers:Record<string, string> = {};
 
+export const getReceiverId = (userId: string) => {
+  return onlineUsers[userId];
+};
+
 io.on('connection', (socket) => {
   console.log('User connected: ', socket.user.fullName);
   const userId = socket.user.id;

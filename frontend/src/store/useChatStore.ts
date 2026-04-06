@@ -3,6 +3,7 @@ import type { Message, User } from '../types';
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import axiosInstance from '../lib/axiosInstance';
+import useAuthStore from './useAuthStore';
 
 type Tab = 'chats' | 'contacts';
 type ChatStore = {
@@ -22,6 +23,8 @@ type ChatStore = {
   clearContacts: () => void
   getMessagesByUserId: (userId:string) => void
   sendMessage: (data:{receiverId: string, dto:FormData}) => void
+  subscribeToMessages: () => void
+  unsubscribeFromMessages: () => void
 };
 
 const useChatStore = create<ChatStore>((set, get) => ({
@@ -123,6 +126,19 @@ const useChatStore = create<ChatStore>((set, get) => ({
     } finally {
       set({ isMessagesLoading: false});
     }
+  },
+  subscribeToMessages: () => {
+    const { selectedUser } = get();
+    if(!selectedUser) return;
+    const socket = useAuthStore.getState().socket;
+    socket?.on('newMessage', (message:Message) => {
+      const currentMessages = get().messages;
+      set({ messages: [...currentMessages, message]});
+    });
+  },
+  unsubscribeFromMessages: () => {
+    const socket = useAuthStore.getState().socket;
+    socket?.off('newMessage');
   }
 }));
 

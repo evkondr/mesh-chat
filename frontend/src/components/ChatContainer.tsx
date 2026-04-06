@@ -7,13 +7,17 @@ import NoChatHistoryPlaceholder from "./NoChatHistoryPlaceholder";
 import MessageInput from "./MessageInput";
 
 const ChatContainer = () => {
-  const { messages, isMessagesLoading, selectedUser, getMessagesByUserId } = useChatStore();
+  const { messages, isMessagesLoading, selectedUser, getMessagesByUserId, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef<HTMLDivElement| null>(null);
   useEffect(() => {
-    if(selectedUser)
-      getMessagesByUserId(selectedUser?.id);
-  }, [getMessagesByUserId, selectedUser]);
+    if(selectedUser) getMessagesByUserId(selectedUser?.id);
+      
+    subscribeToMessages();
+    return () => {
+      unsubscribeFromMessages();
+    };
+  }, [getMessagesByUserId, selectedUser, subscribeToMessages, unsubscribeFromMessages]);
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });

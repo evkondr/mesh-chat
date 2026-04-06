@@ -37,6 +37,7 @@ const MessageInput = () => {
   };
   const removeImage = () => {
     setImagePreview(null);
+    setFile('');
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
   const onSubmit: SubmitHandler<SendMessageDto> = (data) => {
@@ -47,6 +48,7 @@ const MessageInput = () => {
     }
     sendMessage({ receiverId: selectedUser?.id as string, dto: formData});
     setImagePreview(null);
+    setFile('');
     reset();
   };
   return (
