@@ -18,6 +18,7 @@ type ChatStore = {
   toggleSound: () => void
   setActiveTab: (tab:Tab) => void
   setSelectedUser: (user:User | null) => void
+  setChatByUserId: (userId:string) => void
   getAllContacts: (searchValue:string) => void
   getChatPartners: () => void
   clearContacts: () => void
@@ -40,6 +41,12 @@ const useChatStore = create<ChatStore>((set, get) => ({
   toggleSound() {
     localStorage.setItem("isSoundEnabled", String(!get().isSoundEnabled));
     set({ isSoundEnabled: !get().isSoundEnabled });
+  },
+  setChatByUserId(userId:string) {
+    const user = get().chats.find(user => user.id === userId);
+    if(user) {
+      set({selectedUser: user});
+    }
   },
   setActiveTab(tab) {
     set({ activeTab:tab });

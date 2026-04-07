@@ -9,6 +9,7 @@ import useChatStore from "../store/useChatStore";
 
 const ChatPage = () => {
   const { activeTab, selectedUser } = useChatStore();
+  
   return (
     <div className="relative w-full h-screen">
       <BorderAnimatedContainer >
