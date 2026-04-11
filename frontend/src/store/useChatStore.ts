@@ -138,7 +138,11 @@ const useChatStore = create<ChatStore>((set, get) => ({
     const { selectedUser } = get();
     if(!selectedUser) return;
     const socket = useAuthStore.getState().socket;
+
     socket?.on('newMessage', (message:Message) => {
+      if(message.senderId !== selectedUser.id) {
+        return;
+      }
       const currentMessages = get().messages;
       set({ messages: [...currentMessages, message]});
     });

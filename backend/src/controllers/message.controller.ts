@@ -121,7 +121,6 @@ export class MessageController {
         image: imageUrl
       });
       const receiverSocketId = getReceiverId(receiverId);
-      console.log('receiverSocketId', receiverSocketId)
       io.to(receiverSocketId).emit('newMessage', message);
       res.status(200).json(message);
     } catch (error) {
