@@ -22,17 +22,55 @@ model User {
   updatedAt         DateTime @updatedAt @map("updated_at")
   sentMessages      Message[] @relation("UserSentMessages")
   receivedMessages  Message[] @relation("UserReceivedMessages")
-
+  createdGroups     ChatGroup[]
+  groupMemberships  GroupMember[]
+  sentGroupMessages GroupMessage[] @relation("UserSentGroupMessages")
+  chatGroups ChatGroup[] @relation("UserCreatedGroups")
+  groupMembers GroupMember[] @relation("UserGroupMemberships")
 }
 model Message {
-  id          String   @unique @default(uuid()) @id
+  id          String    @unique @default(uuid()) @id
   senderId    String
   receiverId  String
-  text        String? @db.VarChar(2000)
+  text        String?   @db.VarChar(2000)
   image       String?
-  sender      User @relation("UserSentMessages", fields: [senderId], references: [id])
-  receiver    User @relation("UserReceivedMessages", fields: [receiverId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  sender      User      @relation("UserSentMessages", fields: [senderId], references: [id])
+  receiver    User      @relation("UserReceivedMessages", fields: [receiverId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  isRead      Boolean   @default(false)
 
+}
+model ChatGroup {
+  id          String        @unique @default(uuid()) @id @map("id")
+  name        String        @db.VarChar(250)
+  description String?       @db.VarChar(500)
+  avatarUrl   String?
+  creatorId   String
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  creator     User          @relation("UserCreatedGroups", fields: [creatorId], references: [id])
+  members     GroupMember[]
+  messages    GroupMessage[]
+  users       User[]
+}
+model GroupMember {
+  id          String      @unique @default(uuid()) @id
+  groupId     String
+  userId      String
+  joinedAt    DateTime    @default(now())
+  groupe      ChatGroup   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user        User        @relation("UserGroupMemberships", fields: [userId], references: [id])
+  users       User[]
+}
+model GroupMessage {
+  id        String   @unique @default(uuid()) @id
+  groupId   String
+  senderId  String
+  text      String?  @db.VarChar(2000)
+  image     String?
+  groupe    ChatGroup    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  sender    User     @relation("UserSentGroupMessages", fields: [senderId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
