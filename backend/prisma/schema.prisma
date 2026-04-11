@@ -25,8 +25,14 @@ model User {
   createdGroups     ChatGroup[]
   groupMemberships  GroupMember[]
   sentGroupMessages GroupMessage[] @relation("UserSentGroupMessages")
-  chatGroups ChatGroup[] @relation("UserCreatedGroups")
-  groupMembers GroupMember[] @relation("UserGroupMemberships")
+  chatGroups        ChatGroup[] @relation("UserCreatedGroups")
+  groupMembers      GroupMember[] @relation("UserGroupMemberships")
+  token             Token?
+}
+model Token {
+  user         User @relation(fields: [userId], references: [id])
+  userId       String @unique
+  refreshToken String 
 }
 model Message {
   id          String    @unique @default(uuid()) @id

@@ -5,7 +5,7 @@ import { setTokenCookie } from "@/utils/setCookies";
 import { loginSchema, signupSchema } from "@/utils/validations/auth-validations";
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import tokenService from "@/services/token.service";
 
 export class AuthController {
   static async signup(req:Request, res:Response, next:NextFunction) { 
@@ -26,8 +26,9 @@ export class AuthController {
         throw ErrorApi.BadRequest('User already exists');
       }
       const user = await authService.create(parseResult.data);
-      const token = await jwt.sign({userId: user.id}, process.env['JWT_SECRET'] as string, { expiresIn: '7d'});
-      setTokenCookie(res, token, 7 * 24 * 60 * 60 * 100);
+      const tokens = await tokenService.generateToken(user.id);
+      await tokenService.saveToken(user.id, tokens.refreshToken);
+      setTokenCookie(res, tokens.refreshToken, 7 * 24 * 60 * 60 * 100);
       res.status(201).json(user);
     } catch (error) {
       next(error);
@@ -54,8 +55,9 @@ export class AuthController {
       if(!isPasswordCorrect) {
         throw ErrorApi.BadRequest('Wrong credentials');
       }
-      const token = await jwt.sign({userId: user.id}, process.env['JWT_SECRET'] as string, { expiresIn: '7d'});
-      setTokenCookie(res, token, 7 * 24 * 60 * 60 * 100);
+      const tokens = await tokenService.generateToken(user.id);
+      await tokenService.saveToken(user.id, tokens.refreshToken);
+      setTokenCookie(res, tokens.refreshToken, 7 * 24 * 60 * 60 * 100);
       res.status(200).json({
         ...user,
         password: undefined
@@ -74,6 +76,12 @@ export class AuthController {
     } catch (error) {
       next(error);
     }
-
+  }
+   static refreshToken(req:Request, res:Response, next:NextFunction) {
+    try {
+      return res.status(200).json({});
+    } catch (error) {
+      next(error);
+    }
   }
 }
