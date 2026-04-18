@@ -26,10 +26,13 @@ export class AuthController {
         throw ErrorApi.BadRequest('User already exists');
       }
       const user = await authService.create(parseResult.data);
-      const tokens = await tokenService.generateToken(user.id);
+      const tokens = await tokenService.generateToken({ userId: user.id});
       await tokenService.saveToken(user.id, tokens.refreshToken);
       setTokenCookie(res, tokens.refreshToken, 7 * 24 * 60 * 60 * 100);
-      res.status(201).json(user);
+      res.status(201).json({
+        ...user,
+        accessToken:tokens.accessToken
+      });
     } catch (error) {
       next(error);
     }
@@ -46,6 +49,9 @@ export class AuthController {
       const user = await userService.findOne({
         where: {
           email: parseResult.data.email
+        },
+        include: {
+          token: true
         }
       });
       if(!user) {
@@ -55,12 +61,13 @@ export class AuthController {
       if(!isPasswordCorrect) {
         throw ErrorApi.BadRequest('Wrong credentials');
       }
-      const tokens = await tokenService.generateToken(user.id);
+      const tokens = await tokenService.generateToken({ userId: user.id });
       await tokenService.saveToken(user.id, tokens.refreshToken);
       setTokenCookie(res, tokens.refreshToken, 7 * 24 * 60 * 60 * 100);
       res.status(200).json({
         ...user,
-        password: undefined
+        password: undefined,
+        accessToken:tokens.accessToken
       });
     } catch (error) {
       next(error);
@@ -81,6 +88,7 @@ export class AuthController {
   }
    static refreshToken(req:Request, res:Response, next:NextFunction) {
     try {
+
       return res.status(200).json({});
     } catch (error) {
       next(error);

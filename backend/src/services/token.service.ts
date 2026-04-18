@@ -1,7 +1,8 @@
+import { JWTPayload } from '@/types/models';
 import prisma from '@/utils/prisma-client';
 import jwt from 'jsonwebtoken';
 class TokenService {
-  async generateToken<T>(payload:T) {
+  async generateToken(payload:JWTPayload) {
     const accessToken = await jwt.sign({userId: payload}, process.env['JWT_SECRET'] as string, { expiresIn: '1m'});
     const refreshToken = await jwt.sign({userId: payload}, process.env['REFRESH_JWT_SECRET'] as string, { expiresIn: '7d'});
     return {
@@ -45,6 +46,24 @@ class TokenService {
         }
       });
       return deletedToken;
+    }
+  }
+  async validateAccessToken(token: string):Promise<JWTPayload | null> {
+    try {
+      const payload = await jwt.verify(token, process.env['JWT_SECRET'] as string) as JWTPayload;
+      return payload;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+  async validateRefreshToken(token: string):Promise<JWTPayload | null> {
+    try {
+      const payload = await jwt.verify(token, process.env['REFRESH_JWT_SECRET'] as string) as JWTPayload;
+      return payload;
+    } catch (e) {
+      console.log(e);
+      return null;
     }
   }
 }
