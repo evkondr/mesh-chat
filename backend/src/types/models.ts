@@ -1,3 +1,3 @@
-export type JWTPayload = {
+export type UserJWTPayload = {
   userId: string
 }

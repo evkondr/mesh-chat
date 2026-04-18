@@ -35,12 +35,13 @@ class UserService {
     if (!savedToken || !userData) {
       throw ErrorApi.Unauthorized();
     }
-    const newTokens = await tokenService.generateToken(userData);
+    const newTokens = await tokenService.generateToken({ userId: userData.userId});
     const user = await prisma.user.findFirst({
       where: {
         id: userData.userId
       }
     });
+    await tokenService.saveToken(user?.id as string, newTokens.refreshToken);
     return {
       ...user,
       ...newTokens

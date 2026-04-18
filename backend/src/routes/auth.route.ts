@@ -10,6 +10,8 @@ authRouter.post('/login', AuthController.login);
 
 authRouter.post('/logout', AuthController.logout);
 
+authRouter.post('/refresh', AuthController.refreshToken);
+
 authRouter.get('/check', authMiddleware, AuthController.checkAuth);
 
 export default authRouter;

@@ -1,10 +1,10 @@
-import { JWTPayload } from '@/types/models';
+import { UserJWTPayload } from '@/types/models';
 import prisma from '@/utils/prisma-client';
 import jwt from 'jsonwebtoken';
 class TokenService {
-  async generateToken(payload:JWTPayload) {
-    const accessToken = await jwt.sign({userId: payload}, process.env['JWT_SECRET'] as string, { expiresIn: '1m'});
-    const refreshToken = await jwt.sign({userId: payload}, process.env['REFRESH_JWT_SECRET'] as string, { expiresIn: '7d'});
+  async generateToken(payload:UserJWTPayload) {
+    const accessToken = await jwt.sign(payload, process.env['JWT_SECRET'] as string, { expiresIn: '1m'});
+    const refreshToken = await jwt.sign(payload, process.env['REFRESH_JWT_SECRET'] as string, { expiresIn: '7d'});
     return {
       accessToken,
       refreshToken
@@ -48,19 +48,19 @@ class TokenService {
       return deletedToken;
     }
   }
-  async validateAccessToken(token: string):Promise<JWTPayload | null> {
+  async validateAccessToken(token: string) {
     try {
-      const payload = await jwt.verify(token, process.env['JWT_SECRET'] as string) as JWTPayload;
-      return payload;
+      const payload = await jwt.verify(token, process.env['JWT_SECRET'] as string);
+      return payload as jwt.JwtPayload;
     } catch (e) {
       console.log(e);
       return null;
     }
   }
-  async validateRefreshToken(token: string):Promise<JWTPayload | null> {
+  async validateRefreshToken(token: string) {
     try {
-      const payload = await jwt.verify(token, process.env['REFRESH_JWT_SECRET'] as string) as JWTPayload;
-      return payload;
+      const payload = await jwt.verify(token, process.env['REFRESH_JWT_SECRET'] as string);
+      return payload as jwt.JwtPayload;
     } catch (e) {
       console.log(e);
       return null;

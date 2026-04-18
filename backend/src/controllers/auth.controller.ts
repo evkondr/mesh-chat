@@ -1,7 +1,7 @@
 import authService from "@/services/auth.service";
 import userService from "@/services/user.service";
 import ErrorApi from "@/utils/errorApi";
-import { setTokenCookie } from "@/utils/setCookies";
+import { setTokenCookie } from "@/utils/set-cookies";
 import { loginSchema, signupSchema } from "@/utils/validations/auth-validations";
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
@@ -49,9 +49,6 @@ export class AuthController {
       const user = await userService.findOne({
         where: {
           email: parseResult.data.email
-        },
-        include: {
-          token: true
         }
       });
       if(!user) {
@@ -86,10 +83,15 @@ export class AuthController {
       next(error);
     }
   }
-   static refreshToken(req:Request, res:Response, next:NextFunction) {
+  static async refreshToken(req:Request, res:Response, next:NextFunction) {
     try {
-
-      return res.status(200).json({});
+      const { refreshToken } = req.cookies;
+      const userData = await userService.refreshToken(refreshToken);
+      setTokenCookie(res, userData.refreshToken, 7 * 24 * 60 * 60 * 100);
+      return res.status(200).json({
+        ...userData,
+        refreshToken: undefined
+      });
     } catch (error) {
       next(error);
     }
