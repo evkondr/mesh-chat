@@ -5,6 +5,7 @@ export interface User {
   profilePic: string
   createdAt: Date
   updatedAt: Date
+  accessToken: string
 }
 export interface Message {
   id: string;

@@ -55,6 +55,7 @@ const useAuthStore = create<AuthStore>((set, get)=> ({
     try {
       set({ isSigningUp: true });
       const { data }= await axiosInstance.post<User>('/auth/signup', dto);
+      localStorage.setItem('accessToken', data.accessToken);
       set({ authUser: data});
       toast.success('Account created successfully');
       get().connectSocket();
@@ -76,6 +77,7 @@ const useAuthStore = create<AuthStore>((set, get)=> ({
     try {
       set({ isLoggingIn: true });
       const { data } = await axiosInstance.post<User>('/auth/login', dto);
+      localStorage.setItem('accessToken', data.accessToken);
       set({ authUser: data});
       toast.success('Successfully logged in');
       get().connectSocket();

@@ -1,17 +1,19 @@
 import ErrorApi from "@/utils/errorApi";
 import { ExtendedError, Socket } from "socket.io";
-import jwt from "jsonwebtoken";
 import prisma from "@/utils/prisma-client";
+import tokenService from "@/services/token.service";
 
 // eslint-disable-next-line no-unused-vars
 const socketAuthMiddleware = async (socket:Socket, next: (err?: ExtendedError) => void) => {
   try{
     
-    const token = socket.handshake.headers.cookie?.split("; ").find((row) => row.startsWith('token='))?.split('=')[1];
-    if(!token) {
+    //const token = socket.handshake.headers.cookie?.split("; ").find((row) => row.startsWith('token='))?.split('=')[1];
+    const accessToken = socket.handshake.headers.authorization?.split(' ')[1];
+
+    if(!accessToken) {
       return next(ErrorApi.Unauthorized());
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
+    const decoded = await tokenService.validateAccessToken(accessToken);
     if (!decoded) {
       console.log("Socket connection rejected: Invalid token");
       return next(ErrorApi.Unauthorized());
