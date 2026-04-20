@@ -9,6 +9,7 @@ import limiter from './middleware/rate.limit.middleware.js';
 import messageRouter from './routes/message.route.js';
 import cors from 'cors';
 import { app, server } from './utils/socket.js';
+import groupsRouter from './routes/groups.route.js';
 
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.use(cors({
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/messages', messageRouter);
+app.use('/api/groups', groupsRouter);
 
 
 app.use(errorMiddleware);
