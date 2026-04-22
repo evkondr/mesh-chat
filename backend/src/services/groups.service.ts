@@ -10,6 +10,23 @@ class GroupsService {
       }
     });
   }
-  
+  async finGroupByText(text: string) {
+    return await prisma.chatGroup.findMany({
+      where: {
+        OR: [
+          {
+            name: {
+              contains: text
+            }
+          },
+          {
+            description: {
+              contains: text
+            }
+          }
+        ]
+      }
+    });
+  }
 }
 export default new GroupsService();

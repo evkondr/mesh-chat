@@ -18,8 +18,8 @@ export class UserController {
         Key: fileName,
         Body: file.data
       }));
-      const profilePic = `${process.env.AWS_ENDPOINT}/${process.env.AWS_BUCKET_NAME}/${fileName}`;
-      const updatedUser = await userService.update(req.user.id, { profilePic });
+      const avatarUrl = `${process.env.AWS_ENDPOINT}/${process.env.AWS_BUCKET_NAME}/${fileName}`;
+      const updatedUser = await userService.update(req.user.id, { avatarUrl });
       res.status(200).json(updatedUser);
     } catch (error) {
       next(error);

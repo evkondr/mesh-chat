@@ -1,3 +1,4 @@
+import groupsService from "@/services/groups.service";
 import messagesService from "@/services/messagesService";
 import userService from "@/services/user.service";
 import ErrorApi from "@/utils/errorApi";
@@ -15,12 +16,14 @@ export class MessageController {
        id: {
         not: loggedInUser
        },
-       fullName: {
+       name: {
         contains: searchParam || '',
         mode: 'insensitive'
        },
       });
-      res.status(200).json(contacts);
+      const groups = await groupsService.finGroupByText(searchParam);
+      res.status(200).json([...contacts,
+        ...groups]);
     } catch (error) {
       next(error);
     }
