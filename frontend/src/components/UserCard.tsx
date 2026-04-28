@@ -14,10 +14,10 @@ const UserCard = ({contact, onClick}:IProps) => {
       <div className="flex items-center gap-3">
         <div className={`avatar ${onlineUsers.includes(contact.id) ? 'avatar-online' : 'avatar-offline'}`}>
           <div className="size-12 rounded-full">
-            <img src={contact.profilePic || "/avatar.png"} />
+            <img src={contact.avatarUrl || "/avatar.png"} />
           </div>
         </div>
-        <h4 className="text-slate-200 font-medium">{contact.fullName}</h4>
+        <h4 className="text-slate-200 font-medium">{contact.name}</h4>
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ const SignUpForm = () => {
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <ChatInput
-        name="fullName"
+        name="name"
         register={register}
         icon={<UserIcon className="input-icon"/>}
         labelText="Full name"

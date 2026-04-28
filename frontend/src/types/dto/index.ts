@@ -1,6 +1,6 @@
 export type SignUpDto = {
   email: string
-  fullName: string
+  name: string
   password: string
 }
 export type LoginDto = Omit<SignUpDto, 'fullName'>

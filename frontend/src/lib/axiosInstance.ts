@@ -17,8 +17,7 @@ axiosInstance.interceptors.response.use((response) => response, async (error) =>
   // Если 401 и запрос не на refresh и еще не обновляли
   if (
     error.response?.status === 401 &&
-      !originalRequest._retry &&
-      originalRequest.url !== '/auth/refresh' // путь к вашему refresh endpoint
+      !originalRequest._retry
   ) {
     originalRequest._retry = true;
 
@@ -28,7 +27,6 @@ axiosInstance.interceptors.response.use((response) => response, async (error) =>
         `${axiosInstance.defaults.baseURL}/auth/refresh`,
         { withCredentials: true },
       );
-
       const newAccessToken = refreshResponse.data.accessToken;
         
       // Сохраняем новый токен
@@ -39,6 +37,7 @@ axiosInstance.interceptors.response.use((response) => response, async (error) =>
       return axiosInstance(originalRequest);
     } catch (refreshError) {
       // Если refresh не удался - редирект на логин или очистка токенов
+      console.error('Token refresh failed:', refreshError);
       localStorage.removeItem("accessToken");
       window.location.href = '/authorization'; // или используйте ваш роутер
       return Promise.reject(refreshError);
